@@ -1,0 +1,98 @@
+/* 
+    Document   : crunkstyles
+    Created on : Oct 6, 2011, 6:03:30 PM
+    Author     : mike
+    Description:
+        extra crunk
+*/
+
+
+html {
+	color:#444;
+	background: #cfcfcf;
+	font-family: arial, helvetica, sans-serif;
+}
+h1 {
+	color:#222;
+}
+
+section.info {
+	float:left;
+	margin: 1.5em;
+	width: 30%;
+	min-width:400px;
+}
+
+div.indented {
+	border: inset 1px #999;
+	background: #c6c6c6;
+	clear:both;
+}
+form.example {
+	margin: 0;
+	padding: 1.5em;
+	overflow:auto;
+	width:480px;
+}
+form.example h1 {
+	font-size: 1.5em;
+}
+form.example div {
+	overflow:auto;
+	margin: 1.5em 0;
+}
+form.example label {
+	margin-right:2em;
+	font-weight: bold;
+	width:250px;
+	display:block;
+	float:left;
+}
+form.example span {
+	display:block;
+	font-weight:normal;
+}
+form.example input.field {
+	padding:0.4em;
+}
+form.example textarea.field {
+	padding:0.4em;
+}
+form.example .field {
+	display:block;
+	width:150px;
+	float:right;
+}
+form.example .field.error {
+	border-color:red;
+}
+form.example .ui-submit {
+	background: #111;
+	float:right;
+	display:block;
+	padding: 1em;
+	margin-top:1em;
+	border: 0;
+	color:#aaa;
+	font-size: 1.5em;
+	cursor:pointer;
+}
+form.example .ui-submit:hover {
+	background: #333;
+	color:#fff;
+}
+form.example a.put-you-in-check-box {
+	background: #bbb;
+	width:160px;
+	float:right;
+	display:block;
+	height:75px;
+	border:1px inset #aaa;
+	cursor:pointer;
+}
+form.example a.put-you-in-check-box input.field {
+	padding:0;margin:0;
+	width:150px;
+	height:75px;
+	cursor:pointer;
+}

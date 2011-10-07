@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Backbrace.js</title>
+		<link rel="stylesheet" type="text/css" href="reset.css"/>
+		<link rel="stylesheet" type="text/css" href="crunkstyle.css"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="_.js"></script>
+		<script type="text/javascript" src="backbone.js"></script>
+		<script type="text/javascript" src="backbrace.js"></script>
+		<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script type="text/javascript" src="example.js"></script>
+	</head>
+	<body>
+	<section class="info">
+		<h1>backbrace.js</h1>
+		<p>A simple validation extension for backbone.js and jquery.</p>
+		<p>Instead of approaching the problem of client-side validation from
+			the <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">
+			DOM/view side</a>, backbrace takes the same stance as backbone,
+			implementing validation in the existing backbone models.
+			It passes events down to the validator using backbone's event system,
+			and allows you to extend a new kind of backbone object,
+			Backbone.Form, which itself extends Backbone.View.
+		</p>
+	</section>
+
+	<div class="indented">
+		<form class="example" type="post" action="/do/stuff?">
+			<h1>An example backbrace form</h1>
+			<div>
+				<label>Email address
+					<span>Email uses the SMTP protocol for sending messages.</span>
+				</label>
+				<input tabindex="1" class="email field" type="text" placeholder="Enter an email address" />
+			</div>
+			<div>
+				<label>URL
+					<span>URL stands for uniform resource locator.</span>
+				</label>
+				<input tabindex="1" class="url field" type="text" placeholder="Enter a url" />
+			</div>
+
+			<hr/>
+
+			<div>
+				<label>Username
+					<span>3-15 characters, please.</span>
+				</label>
+				<input tabindex="1" class="username field" type="text" placeholder="Enter your desired username" />
+			</div>
+			<div>
+				<label>Choose a Password
+					<span>Enter your dirtiest secret.</span>
+				</label>
+				<input tabindex="1" class="password field" type="password" placeholder="Enter a password" />
+			</div>
+			<div>
+				<label>Retype Password
+					<span>(twice!)</span>
+				</label>
+				<input tabindex="1" class="confirmpassword field" type="password" placeholder="Enter a password" />
+			</div>
+			<hr/>
+
+			<div>
+				<label>Choose a personality type
+					<span>Put yourself in a box</span>
+				</label>
+				<select tabindex="1" class="personality field">
+					<option>Type A</option>
+					<option>Type B</option>
+				</select>
+			</div>
+			<div>
+				<label>Sign up for our newsletter
+					<span>This form doesn't do any real server side processing,
+					so I won't be spamming you, promise.</span>
+				</label>
+				<a class="put-you-in-check-box">
+					<input tabindex="1" class="newsletter field" type="checkbox" />
+				</a>
+			</div>
+
+			<hr/>
+
+			<input tabindex="1" class="ui-submit" type="submit"/>
+		</form>
+	</div>
+</body>
+</html>

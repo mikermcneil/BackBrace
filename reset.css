@@ -1,0 +1,10 @@
+body {height:100%;}
+html, body {text-align:left;font-size: 1em;}
+html,body,img,form,textarea,input,fieldset,div,div,ul,li,ol,dl,dt,dd,h1,h2,h3,h4,h5,h6 { margin: 0;padding: 0;}
+ol,ul,li {list-style: none;}
+a img{border:none;}
+a {text-decoration:none;font-weight: normal;font-family: inherit;target-new: tab !important}
+*:active,*:focus {
+	outline: none;
+	-moz-outline-style: none;
+ }
