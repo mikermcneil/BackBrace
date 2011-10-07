@@ -37,18 +37,23 @@ Backbone.Collection = Backbone.Collection.extend({
 })
 
 
-// Built this for validation
-// Makes a few big assumptions:
-// When you extend this class:
-// 1) set this.el = a selector which is the form or some parent
-// with no potentially conflicting children
-// 2) set this.model = the backbone class name of your model (i.e. Message)
-// 3) All form fields must satisfy .field.fieldName where
-// fieldname == the attribute in the backbone model
-// 4) There is a map "rules" in the backbone model
+
 //
-// Overwrite decorateField and undecorateField to control what happens
-// when an error is detected (and resolved)
+//
+// When you extend this class:
+//
+// 1) set this.el = a form selector
+//
+// 2) set this.model = the backbone class name of your model (i.e. Message)
+//
+// 3) There is a map "rules" in the backbone model
+//
+// 4) All form fields must have classes 'field' and $fieldName where $fieldname == the corresponding
+//		attribute in the backbone model.  If you assign a validation rule that and $fieldName
+//		which is not in the model, you can still use custom validation (things like reentering your password)
+//
+// 5) Overwrite decorateField and undecorateField to control what happens when an error is detected (and resolved)
+//
 Backbone.Model = Backbone.Model.extend({
 	
 	validateOne: function (field,value) {
