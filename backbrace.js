@@ -26,7 +26,16 @@
 // 6) Override handleForm to control your form's submit behavior
 //
 /**
- * Form view
+ *
+ *
+ * events ->
+ *	decorateField
+ *	undecorateField
+ *	submit
+ *	error
+ *
+ * Methods ->
+ *	reset
  */
 Backbone.Form = Backbone.View.extend({
 	dataKey: 'backbraceinput',
@@ -73,8 +82,10 @@ Backbone.Form = Backbone.View.extend({
 
 
 
-
-
+	// Reset the form
+	reset: function () {
+		this.unhighlightField(this.el.find('.field'))
+	},
 	events: {
 		"focus .field": "focusField",
 		"blur .field": "blurField",
