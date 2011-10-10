@@ -63,7 +63,7 @@ form.example .field {
 	width:150px;
 	float:right;
 }
-form.example span.message {
+form.example span.validation-message {
 	float:right;
 	display:block;
 	width:162px;

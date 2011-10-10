@@ -40,7 +40,7 @@
 Backbone.Form = Backbone.View.extend({
 	dataKey: 'backbraceinput',
 
-	
+
 	/**
 	 * Presentation logic for error reporting
 	 * element -> the form element that is naughty
@@ -51,14 +51,42 @@ Backbone.Form = Backbone.View.extend({
 	 *	form convention outlined in example.html.
 	 */
 	decorateField: function(element,error) {
-		element.addClass('error');
-		element.parent().addClass('error');
-		element.parent().children('span.message').addClass('error').show().text(error[0].message);
+		try {
+			element.addClass('error');
+			element.parent().addClass('error');
+			element.parent().children('span.validation-message').addClass('error').show().text(error[0].message);
+		}
+		catch (e) {
+			var msg =
+			"Trying to use default behavior of backbrace,"+
+			" but there was an error when highlighting "+
+			"a field.\n"+
+			"If you don't want to use backbrace form conventions, "+
+			"you must override highlightField.\n"
+			if (console)
+				console.log(msg,e);
+			else alert(msg);
+			throw e;
+		}
 	},
 	undecorateField: function(element,error) {
-		element.removeClass('error');
-		element.parent().removeClass('error');
-		element.parent().children('span.message').addClass('error').hide().text('');
+		try {
+			element.removeClass('error');
+			element.parent().removeClass('error');
+			element.parent().children('span.validation-message').addClass('error').hide().text('');
+		}
+		catch (e) {
+			var msg =
+			"Trying to use default behavior of backbrace,"+
+			" but there was an error when unhighlighting "+
+			"a field."+
+			"If you don't want to use backbrace form conventions, "+
+			"you must override unhighlightField."
+			if (console)
+				console.log(msg,e);
+			else alert(msg);
+			throw e;
+		}
 	},
 
 	/**
@@ -84,7 +112,7 @@ Backbone.Form = Backbone.View.extend({
 
 	// Reset the form
 	reset: function () {
-		this.unhighlightField(this.el.find('.field'))
+		this.undecorateField(this.el.find('.field'))
 	},
 	events: {
 		"focus .field": "focusField",
@@ -122,7 +150,7 @@ Backbone.Form = Backbone.View.extend({
 		}
 		else
 			this.error();
-		
+
 		// Prevent form submission
 		e.preventDefault();
 		return false;
@@ -138,8 +166,11 @@ Backbone.Form = Backbone.View.extend({
 		return !field || hasError;
 	},
 	renderField: function(error,elem,field) {
-		if (error)
+		if (error) {
+			if (! _.isArray(error))
+				error = [error];
 			this.decorateField(elem,error);
+		}
 		else
 			this.undecorateField(elem,error);
 	},
@@ -163,7 +194,7 @@ Backbone.Form = Backbone.View.extend({
 
 // Extensions to the model that support validation
 Backbone.Model = Backbone.Model.extend({
-	
+
 	validateOne: function (field,value) {
 		var ruleName = this.rules[field];
 		var result = this.runValidationFn(this.attributes,ruleName,field,value);
@@ -172,6 +203,7 @@ Backbone.Model = Backbone.Model.extend({
 	// Validate a field for one or more rules
 	runValidationFn: function (attributes,rule,fieldName,value) {
 		// Parse rule name, get options if they exist
+		// If this is a list of rules, evaluate each rule
 		if (_.isArray(rule)) {
 			var errors = [];
 			for (var i=0;i<rule.length;i++) {
@@ -181,6 +213,7 @@ Backbone.Model = Backbone.Model.extend({
 			}
 			return (errors.length > 0) ? errors : false;
 		}
+		// Evaluate an individual rule
 		else {
 			var ruleName,options={};
 			if (_.isString(rule)) {
