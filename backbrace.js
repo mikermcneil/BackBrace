@@ -54,7 +54,7 @@ Backbone.Form = Backbone.View.extend({
 		try {
 			element.addClass('error');
 			element.parent().addClass('error');
-			element.parent().children('span.validation-message').addClass('error').show().text(error[0].message);
+			element.parent().children('span.validation-message').addClass('error').text(error[0].message);
 		}
 		catch (e) {
 			var msg =
@@ -73,7 +73,7 @@ Backbone.Form = Backbone.View.extend({
 		try {
 			element.removeClass('error');
 			element.parent().removeClass('error');
-			element.parent().children('span.validation-message').addClass('error').hide().text('');
+			element.parent().children('span.validation-message').addClass('error').text('');
 		}
 		catch (e) {
 			var msg =
