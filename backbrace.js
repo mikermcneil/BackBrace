@@ -38,9 +38,17 @@
  *	reset
  */
 Backbone.Form = Backbone.View.extend({
+
+	// The jQuery.data key to use on form inputs (associates them w/ model)
 	dataKey: 'backbraceinput',
 
+	// Set to true to validate after an field's onblur event
+	validateOnBlur: true,
 
+
+	//////////////////////////////////////////////////////////////////////////
+	// Public events
+	//////////////////////////////////////////////////////////////////////////
 	/**
 	 * Presentation logic for error reporting
 	 * element -> the form element that is naughty
@@ -106,14 +114,23 @@ Backbone.Form = Backbone.View.extend({
 	 */
 	error: function () {
 	},
+
+
 	//////////////////////////////////////////////////////////////////////////
-
-
+	// Public actions
+	//////////////////////////////////////////////////////////////////////////
 
 	// Reset the form
 	reset: function () {
 		this.undecorateField(this.el.find('.field'))
 	},
+	// Trigger the form's submit event
+	doSubmit: function () {
+		this.el.submit();
+	},
+
+
+
 	events: {
 		"focus .field": "focusField",
 		"blur .field": "blurField",
@@ -138,7 +155,9 @@ Backbone.Form = Backbone.View.extend({
 		this.undecorateField($(e.currentTarget));
 	},
 	blurField: function (e) {
-		this.validateField($(e.currentTarget));
+		if (this.validateOnBlur) {
+			this.validateField($(e.currentTarget));
+		}
 	},
 	changeField: function (e) {
 		this.validateField($(e.currentTarget));
