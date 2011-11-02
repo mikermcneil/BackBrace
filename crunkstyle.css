@@ -109,7 +109,7 @@ form.example a.put-you-in-check-box input.field {
 }
 
 
-#form-result {
+.form-result {
 	margin-top: 1em;
 	display:none;
 	padding: 1em 0;
@@ -120,7 +120,7 @@ form.example a.put-you-in-check-box input.field {
 	border: 1px inset #eee;
 	background: #009933;
 }
-#form-result.error {
+.form-result.error {
 	display:none;
 	background: #990000;
 }

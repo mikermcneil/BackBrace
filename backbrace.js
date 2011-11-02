@@ -59,6 +59,7 @@ Backbone.Form = Backbone.View.extend({
 	 *	form convention outlined in example.html.
 	 */
 	decorateField: function(element,error) {
+		
 		try {
 			element.addClass('error');
 			element.parent().addClass('error');
@@ -78,6 +79,7 @@ Backbone.Form = Backbone.View.extend({
 		}
 	},
 	undecorateField: function(element,error) {
+		
 		try {
 			var fresh = !element.data("fresh");
 			element.removeClass('error');
@@ -177,7 +179,9 @@ Backbone.Form = Backbone.View.extend({
 		}
 	},
 	changeField: function (e) {
-		this.validateField($(e.currentTarget));
+//		if (this.validateOnBlur) {
+//			this.validateField($(e.currentTarget));
+//		}
 	},
 	trySubmit: function(e) {
 		if (!this.validateFields()) {
@@ -194,12 +198,21 @@ Backbone.Form = Backbone.View.extend({
 	validateField: function(element) {
 		var field = element.data(this.dataKey),
 		input = this.fields[field],
-		hasError;
+		error;
 		if (field) {
-			hasError = this.model.validateOne(field,input.val());
-			this.renderField(hasError,input,field);
+			error = this.model.validateOne(field,input.val());
+
+			// Lookup rule
+			var rule = this.model.rules[field];
+
+			// Allow user to override destination element
+			if (rule.displayField) {
+				this.renderField(error,this.fields[rule.displayField],field);
+			}
+			else 
+				this.renderField(error,input,field);
 		}
-		return !field || hasError;
+		return !field || error;
 	},
 	renderField: function(error,elem,field) {
 		if (error) {
@@ -217,8 +230,19 @@ Backbone.Form = Backbone.View.extend({
 		hasError = false;
 		_.each(this.model.rules,function (rule,field) {
 			var elem = view.el.find(".field."+field);
-			hasError = view.validateField(elem) || hasError;
-			data[field] = view.el.find(".field."+field).val();
+
+			// More than one field with that name exists
+			if (elem.length > 1) {
+			// TODO
+			//				_.each(elem,function (e) {
+			//					hasError = view.validateField(e) || hasError;
+			//				})
+			}
+			// Only one exists
+			else {
+				hasError = view.validateField(elem) || hasError;
+				data[field] = view.el.find(".field."+field).val();
+			}
 		});
 		this.model.set(data);
 		return hasError;
@@ -231,11 +255,16 @@ Backbone.Form = Backbone.View.extend({
 // Extensions to the model that support validation
 Backbone.Model = Backbone.Model.extend({
 
+	// 
 	validateOne: function (field,value) {
-		var ruleName = this.rules[field];
-		var result = this.runValidationFn(this.attributes,ruleName,field,value);
+		var rule = this.rules[field];
+		if (!rule || _.isEmpty(rule)) {
+			return null;
+		}
+		var result = this.runValidationFn(this.attributes,rule,field,value);
 		return result;
 	},
+	
 	// Validate a field for one or more rules
 	runValidationFn: function (attributes,rule,fieldName,value) {
 		// Parse rule name, get options if they exist
@@ -301,17 +330,23 @@ Backbone.Model = Backbone.Model.extend({
 			},
 			maxlength: {
 				message: 'Too long.'
+			},
+			minCount: {
+				message: 'Too few.'
+			},
+			maxCount: {
+				message: 'Too many.'
 			}
 		},
 		custom : function(attributeName, model, valueToSet,options) {
 			return model[options.methodName](attributeName, valueToSet);
 		},
-		required : function(attributeName, model, valueToSet) {
+		required : function(attributeName, model, valueToSet,options) {
 			var currentValue = model.get(attributeName);
 			var isNotAlreadySet = _.isUndefined(currentValue);
 			var isNotBeingSet = _.isUndefined(valueToSet);
 			if (_.isNull(valueToSet) || valueToSet === "" || (isNotBeingSet && isNotAlreadySet)) {
-				return this.errors.required;
+				return _.extend(this.errors.required,options);
 			}
 			return false;
 		},
@@ -344,7 +379,7 @@ Backbone.Model = Backbone.Model.extend({
 					if (options.message)
 						return {
 							message: options.message
-							};
+						};
 					else
 						return this.errors.pattern;
 				}
@@ -356,7 +391,7 @@ Backbone.Model = Backbone.Model.extend({
 				if (options.message)
 					return {
 						message: options.message
-						};
+					};
 				else
 					return this.errors.min;
 			} else return false;
@@ -367,7 +402,7 @@ Backbone.Model = Backbone.Model.extend({
 				if (options.message)
 					return {
 						message: options.message
-						};
+					};
 				else
 					return this.errors.max;
 			} else return false;

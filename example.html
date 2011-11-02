@@ -27,7 +27,7 @@
 	</section>
 
 	<div class="sunken">
-		<form class="example" type="post" action="/do/stuff?">
+		<form id="example" class="example" type="post" action="/do/stuff?">
 			<h1>An example backbrace form</h1>
 			<div>
 				<label>Email address
@@ -68,7 +68,7 @@
 				<input tabindex="1" class="password field" type="password" placeholder="Enter a password" />
 				<span class="validation-message"></span>
 			</div>
-			
+
 			<hr/>
 
 			<div>
@@ -94,7 +94,37 @@
 
 			<hr/>
 
-			<h2 id="form-result">Success!</h2>
+			<h2 class="form-result">Success!</h2>
+			<input tabindex="1" class="ui-submit" type="submit"/>
+		</form>
+
+	</div>
+
+
+	<div class="sunken">
+		<form id="example2" class="example" type="post" action="#">
+			<h1>Virtual Fields</h1>
+
+			<div>
+				<label>Pet names
+					<span>Enter the name of your pet</span>
+				</label>
+				<input tabindex="1" name="petname" class="petname field" type="text" placeholder="Pet name" />
+				<span class="validation-message"></span>
+			</div>
+
+			<!-- hidden inputs -->
+			<h4>Normally these would be hidden</h4>
+			<br/>
+			<input tabindex="1" name="petname" class="thingA field" type="text"/>
+			<input tabindex="1" name="petname" class="thingB field" type="text"/>
+			<br/>
+			<br/>
+			<br/>
+
+			<hr/>
+
+			<h2 class="form-result">Success!</h2>
 			<input tabindex="1" class="ui-submit" type="submit"/>
 		</form>
 	</div>
