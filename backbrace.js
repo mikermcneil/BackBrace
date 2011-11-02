@@ -59,7 +59,6 @@ Backbone.Form = Backbone.View.extend({
 	 *	form convention outlined in example.html.
 	 */
 	decorateField: function(element,error) {
-		
 		try {
 			element.addClass('error');
 			element.parent().addClass('error');
@@ -72,7 +71,7 @@ Backbone.Form = Backbone.View.extend({
 			"a field.\n"+
 			"If you don't want to use backbrace form conventions, "+
 			"you must override highlightField.\n"
-			if (console)
+			if (false && console)
 				console.log(msg,e);
 			else alert(msg);
 			throw e;
@@ -98,7 +97,7 @@ Backbone.Form = Backbone.View.extend({
 			"a field."+
 			"If you don't want to use backbrace form conventions, "+
 			"you must override unhighlightField."
-			if (console)
+			if (false && console)
 				console.log(msg,e);
 			else alert(msg);
 			throw e;
@@ -138,6 +137,7 @@ Backbone.Form = Backbone.View.extend({
 			this.el = $(this.el);
 
 		// Populate fields
+		// TODO: switch to iterating through form inputs instead
 		var view = this;
 		_.each(this.model.rules,function (value,field) {
 			var element = view.el.find(".field."+field);
@@ -388,23 +388,13 @@ Backbone.Model = Backbone.Model.extend({
 		min : function(attributeName, model, valueToSet,options) {
 			valueToSet = +valueToSet;
 			if (valueToSet < options.min) {
-				if (options.message)
-					return {
-						message: options.message
-					};
-				else
-					return this.errors.min;
+				return _.extend(this.errors.min,options);
 			} else return false;
 		},
 		max : function(attributeName, model, valueToSet,options) {
 			valueToSet = +valueToSet;
 			if (valueToSet > options.max) {
-				if (options.message)
-					return {
-						message: options.message
-					};
-				else
-					return this.errors.max;
+				return _.extend(this.errors.max,options);
 			} else return false;
 		},
 		minlength : function( attributeName, model, valueToSet,options) {
