@@ -6,6 +6,7 @@ var Example = Backbone.Model.extend({
 	defaults: {
 		email:'',
 		url:'',
+	    number:'',
 		username:'',
 		password:'',
 		personality:'',
@@ -25,6 +26,17 @@ var Example = Backbone.Model.extend({
 		},
 		"required"
 		],
+number: [
+		{
+			name:"min",
+			min: 15
+		},
+		{
+			name:"max",
+			max: 18
+		},
+		"required"
+],
 		password: ["required"]
 	}
 });
