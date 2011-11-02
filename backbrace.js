@@ -79,9 +79,15 @@ Backbone.Form = Backbone.View.extend({
 	},
 	undecorateField: function(element,error) {
 		try {
+			var fresh = !element.data("fresh");
 			element.removeClass('error');
 			element.parent().removeClass('error');
-			element.parent().children('span.validation-message').addClass('error').text('');
+			var validationMsg = element.parent().children('span.validation-message').addClass('error');
+
+			if (!fresh)
+				validationMsg.text('');
+			else
+				element.data("fresh",true)
 		}
 		catch (e) {
 			var msg =
@@ -122,15 +128,34 @@ Backbone.Form = Backbone.View.extend({
 
 	// Reset the form
 	reset: function () {
+
+		// update selector
+		if (this.selector)
+			this.el = $(this.selector);
+		else
+			this.el = $(this.el);
+
+		// Populate fields
+		var view = this;
+		_.each(this.model.rules,function (value,field) {
+			var element = view.el.find(".field."+field);
+			element.data(view.dataKey,field);
+			view.fields[field]=element;
+		})
+		 
+		// reset form validation
 		this.undecorateField(this.el.find('.field'))
+
+		// reassign events
+		this.delegateEvents();
 	},
 	// Trigger the form's submit event
 	doSubmit: function () {
-		this.el.submit();
+		if (this.el.submit)
+			this.el.submit();
+		else
+			$(this.el).submit();
 	},
-
-
-
 	events: {
 		"focus .field": "focusField",
 		"blur .field": "blurField",
@@ -140,15 +165,7 @@ Backbone.Form = Backbone.View.extend({
 	fields: {},
 	initialize: function () {
 		this.model = new (this.model)()
-		this.el = $(this.el);
-
-		// Populate fields
-		var view = this;
-		_.each(this.model.rules,function (value,field) {
-			var element = view.el.find(".field."+field);
-			element.data(view.dataKey,field);
-			view.fields[field]=element;
-		})
+		this.reset();
 		_.bindAll(this);
 	},
 	focusField: function (e) {
@@ -267,14 +284,17 @@ Backbone.Model = Backbone.Model.extend({
 			url: {
 				message: 'Invalid URL.'
 			},
+			naturalNumber: {
+				message: 'Invalid amount.'
+			},
 			pattern: {
 				message: 'pattern'
 			},
 			min: {
-				message: 'min'
+				message: 'Too small.'
 			},
 			max: {
-				message: 'max'
+				message: 'Too big.'
 			},
 			minlength: {
 				message: 'Too short.'
@@ -308,23 +328,48 @@ Backbone.Model = Backbone.Model.extend({
 				return this.errors.url;
 			} else return false;
 		},
+		naturalNumber : function (attributeName, model, valueToSet,options) {
+			var naturalRegex = /^(0|([1-9][0-9]*))$/;
+			if (!valueToSet.match(naturalRegex)) {
+				
+				return this.errors.naturalNumber;
+			} else return false;
+		},
 		pattern : function(attributeName, model, valueToSet,options) {
 			if (_.isString(valueToSet)) {
 				if (valueToSet.match(options.pattern)) {
+
 					return false;
 				} else {
-					return this.errors.pattern;
+					if (options.message)
+						return {
+							message: options.message
+							};
+					else
+						return this.errors.pattern;
 				}
 			} else return false;
 		},
 		min : function(attributeName, model, valueToSet,options) {
-			if (valueToSet < options.minimumValue) {
-				return this.errors.min;
+			valueToSet = +valueToSet;
+			if (valueToSet < options.min) {
+				if (options.message)
+					return {
+						message: options.message
+						};
+				else
+					return this.errors.min;
 			} else return false;
 		},
 		max : function(attributeName, model, valueToSet,options) {
-			if (valueToSet > options.maximumValue) {
-				return this.errors.max;
+			valueToSet = +valueToSet;
+			if (valueToSet > options.max) {
+				if (options.message)
+					return {
+						message: options.message
+						};
+				else
+					return this.errors.max;
 			} else return false;
 		},
 		minlength : function( attributeName, model, valueToSet,options) {
